@@ -1,4 +1,5 @@
 class Room < ApplicationRecord
+	has_many :reviews
 	has_many :special_prices
 	has_many :bookings
 	belongs_to :city

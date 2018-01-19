@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_many :reviews
   has_many :bookings
 	belongs_to :role
 	has_many :rooms
