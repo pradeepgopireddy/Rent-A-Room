@@ -1,0 +1,28 @@
+	<%= form_for @room do |f| %>
+	<label for="room_name">Name:</label>
+	<%= f.text_field :name %>
+
+	<label for = "room_description">Description:</label>
+	<%= f.text_area :description %>
+
+	<label for="room_price">Price:</label>
+	<%= f.number_field :price %>
+
+	<label for="room_rules">Rules:</label>
+	<%= f.text_area :rules %>
+
+	<label for="room_address">Address:</label>
+	<%= f.text_field :address %>
+
+	<label for="room_images">Images:</label>
+	<%= f.file_field :images %>
+
+	<label for="room_city_id">City:</label>
+	<%= f.collection_select :city_id, City.all, :id, :name, prompt: "Select City" %>
+	<h3>Select Amenities</h3>
+	<%= f.collection_check_boxes :amenity_ids, Amenity.all, :id, :name do |amenity| %>
+		<%= amenity.check_box %><%= amenity.label %>
+		<% end %>
+
+	<%= f.submit %>
+<% end %>

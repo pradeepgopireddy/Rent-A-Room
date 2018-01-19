@@ -1,0 +1,9 @@
+
+<h3>Listing Rooms</h3>
+<ul>
+<% @rooms.each do |room| %>
+	<li><%= link_to room.name, room_path(room.id) %></li>
+<% end %>
+</ul>
+<%= link_to "Add Room", new_room_path %>
+<%= will_paginate @rooms %>

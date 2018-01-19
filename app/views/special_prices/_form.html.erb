@@ -1,0 +1,17 @@
+<% if @special_price.errors.any? %>
+	<ul>
+	<% @special_price.errors.full_messages.each do |msg| %>
+		<li><%= msg %></li>
+	<% end %>
+	</ul>
+<%end %>
+<%= form_for([@room, @special_price]) do |f| %>
+
+	<label for="special_price_start_date">Start Date</label>
+	<%= f.date_select :start_date %>
+	<label  for="special_price_end_date">End Date</label>
+	<%= f.date_select :end_date %>
+	<label for="special_price_price">Price</label>
+	<%= f.number_field :price %><br/>
+	<%= f.submit %>
+<% end %>

@@ -1,0 +1,21 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @city.name %>
+</p>
+<% if @city.rooms.where("is_authorized = ?", true).empty?%>
+	<p>No authorized rooms in this city</p>
+<% else %>
+	<ul>
+	<% @city.rooms.each do |room| %>
+		<% if room.is_authorized? %>
+			<li><%= link_to room.name, room_path(room.id) %></li>
+		<% end %>
+	<% end %>
+	</ul>
+<% end %>
+<% if (user_signed_in?) && (can? [:update, :destroy], @city) %>
+<%= link_to 'Edit', edit_city_path(@city) %> |
+<%= link_to 'Back', cities_path %>
+<% end %>

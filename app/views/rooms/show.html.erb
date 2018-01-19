@@ -1,0 +1,72 @@
+<h3><%= @room.name %></h3>
+<% if (user_signed_in?) && (can? :update, @room) %>
+<%= link_to "Edit", edit_room_path(@room.id) %> |
+<% end %>
+<% if (user_signed_in?) && (can? :destroy, @room) %>
+<%= link_to "Destroy", room_path(@room.id), method: :delete, data: {confirm: "Are you sure want to remove house"} %>
+<% end %>
+<%= image_tag(@room.images, size: "250x250") %>
+<p>Price : <%= @room.price %></p>
+<p>City : <%= @room.city.name %></p>
+<p>Address : <%= @room.address %></p>
+<h3>Rules:</h3>
+<p><%= @room.rules %></p>
+<h3>Listing Amenities</h3>
+<ul>
+<% @room.amenities.each do |amenity| %>
+	<li><%= amenity.name %></li>
+<% end %>
+</ul>
+<!-- AIzaSyC4d23Mk4IFcjFAcOGYJormK-eIBQjRnrU -->
+<iframe 
+	width= "600"
+	height= "450"
+	frameborder= "0" style="border:0"
+	src="https://www.google.com/maps/embed/v1/place?key=AIzaSyC4d23Mk4IFcjFAcOGYJormK-eIBQjRnrU&q=<%= @room.address%>" allowfullscreeen></iframe><br/>
+<% if @room.special_prices.any? %>
+<h3>Special Prices</h3>
+<table>
+	<thead>
+		<tr>
+			<th> # </th>
+			<th> Start Date </th>
+			<th> End Date </th>
+			<th> Price </th>
+			<th colspan="3"></th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @room.special_prices.each_with_index do |special_price, index| %>
+			<tr>
+				<td><%= index + 1 %></td>
+				<td><%= special_price.start_date %></td>
+				<td><%= special_price.end_date %></td>
+				<td><%= special_price.price %></td>
+				<td>
+					<% if @room.user_id == current_user.id %>
+						<%= link_to "show", room_special_price_path(special_price.room.id, special_price.id) %> | <%= link_to "edit",edit_room_special_price_path(special_price.room.id, special_price.id) %> | <%= link_to "destroy", room_special_price_path(special_price.room.id, special_price.id), method: :delete, data: {confirm: "Are you sure"} %>
+					<% end %>
+				</td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>
+<% end %>
+
+<% if @room.is_authorized? %>
+	<h3>Booking Form</h3>
+	<%= form_for @booking do |f| %>
+		<label for="booking_start_date">Start Date:</label>
+		<%= f.date_select :start_date %>
+
+		<label for="booking_end_date">End Date:</label>
+		<%= f.date_select :end_date %>
+
+		<%= f.hidden_field :room_id, value: @room.id %><br/>
+		<%= f.submit %>
+	<% end %>
+<% end %>
+
+<% if (@room.user_id == current_user.id)  && (can? :create, SpecialPrice.new) %>
+	<%= link_to "Add Special Price", new_room_special_price_path(@room.id) %>
+<% end %>
