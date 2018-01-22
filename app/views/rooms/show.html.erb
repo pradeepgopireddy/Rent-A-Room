@@ -1,3 +1,11 @@
+<% if @review.errors.any? %>
+	<ul>
+	<% @review.errors.full_messages.each do |msg| %>
+		<li><%= msg %></li>
+	<% end %>
+	</ul>
+<% end %>
+
 <h3><%= @room.name %></h3>
 <% if (user_signed_in?) && (can? :update, @room) %>
 <%= link_to "Edit", edit_room_path(@room.id) %> |
@@ -6,9 +14,10 @@
 <%= link_to "Destroy", room_path(@room.id), method: :delete, data: {confirm: "Are you sure want to remove house"} %>
 <% end %>
 <%= image_tag(@room.images, size: "250x250") %>
-<p>Price : <%= @room.price %></p>
-<p>City : <%= @room.city.name %></p>
-<p>Address : <%= @room.address %></p>
+<p><b>Price :</b><%= @room.price %></p>
+<p><b>City :</b><%= @room.city.name %></p>
+<p><b>Description:</b><%= @room.address %></p>
+<p><b>Address :</b> <%= @room.address %></p>
 <h3>Rules:</h3>
 <p><%= @room.rules %></p>
 <h3>Listing Amenities</h3>
@@ -23,6 +32,18 @@
 	height= "450"
 	frameborder= "0" style="border:0"
 	src="https://www.google.com/maps/embed/v1/place?key=AIzaSyC4d23Mk4IFcjFAcOGYJormK-eIBQjRnrU&q=<%= @room.address%>" allowfullscreeen></iframe><br/>
+<% if @room.reviews.any? %>
+	<h3>Listing Reviews <%= @room.reviews.length %></h3>
+	<ul>
+	<% @room.reviews.each do |review| %>
+	<li><h5><%= review.user.username %></h5></li>
+	<li><%= review.created_at %></li>
+	<li><p><%= review.review %></p></li>
+	<% end %>
+	</ul>
+<% else %>
+	<p>No reviews found.</p>
+<% end %>
 <% if @room.special_prices.any? %>
 <h3>Special Prices</h3>
 <table>
@@ -66,7 +87,48 @@
 		<%= f.submit %>
 	<% end %>
 <% end %>
-
+<% if user_signed_in? %>
 <% if (@room.user_id == current_user.id)  && (can? :create, SpecialPrice.new) %>
 	<%= link_to "Add Special Price", new_room_special_price_path(@room.id) %>
+<% end %>
+	<%if Review.where("user_id = ? AND room_id = ?", current_user.id, @room.id).length < Booking.where("user_id < ? AND room_id = ?  AND end_date = ?", current_user.id, @room.id, Date.today).length %>
+
+		<%= form_for @review do |f| %>
+			<label for="review_review"><b>Review:</b></label>
+			<%= f.text_field :review %>
+			<label for="review_food_rating"><b>Food Rating:</b></label>
+			<%= f.radio_button :food_rating, 1 %> 1
+			<%= f.radio_button :food_rating, 2 %> 2
+			<%= f.radio_button :food_rating, 3 %> 3
+			<%= f.radio_button :food_rating, 4 %> 4
+			<%= f.radio_button :food_rating, 5 %> 5
+			<label for="review_cleanliness_rating"><b>Cleanliness Rating:</b></label>
+			<%= f.radio_button :cleanliness_rating, 1 %> 1
+			<%= f.radio_button :cleanliness_rating, 2 %> 2
+			<%= f.radio_button :cleanliness_rating, 3 %> 3
+			<%= f.radio_button :cleanliness_rating, 4 %> 4
+			<%= f.radio_button :cleanliness_rating, 5 %> 5
+			<label for="review_saftey_rating"><b>Saftey Rating:</b></label>
+			<%= f.radio_button :saftey_rating, 1 %> 1
+			<%= f.radio_button :saftey_rating, 2 %> 2
+			<%= f.radio_button :saftey_rating, 3 %> 3
+			<%= f.radio_button :saftey_rating, 4 %> 4
+			<%= f.radio_button :saftey_rating, 5 %> 5
+			<label for="review_facility_rating"><b>Facility Rating:</b></label>
+			<%= f.radio_button :facility_rating, 1 %> 1
+			<%= f.radio_button :facility_rating, 2 %> 2
+			<%= f.radio_button :facility_rating, 3 %> 3
+			<%= f.radio_button :facility_rating, 4 %> 4
+			<%= f.radio_button :facility_rating, 5 %> 5
+			<label for="review_locality_rating"><b>Locality Rating</b></label>
+			<%= f.radio_button :locality_rating, 1 %> 1
+			<%= f.radio_button :locality_rating, 2 %> 2
+			<%= f.radio_button :locality_rating, 3 %> 3
+			<%= f.radio_button :locality_rating, 4 %> 4
+			<%= f.radio_button :locality_rating, 5 %> 5
+			<%= f.hidden_field :room_id, value: @room.id %>
+			<%= f.submit "Add Review" %>
+
+		<% end %>
+	<%end %>
 <% end %>

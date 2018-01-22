@@ -6,13 +6,13 @@ class Ability
     if user.nil?
         can :read, [Room, Amenity, City]
     elsif user.role? "admin"
-        can :manage, [Room, Amenity, City, Booking]
+        can :manage, [Room, Amenity, City, Booking, Review]
         can :unauthorized_rooms, Room
     elsif user.role? "host"
         
         can :my_rooms, [Room]
-        can :read, [Amenity, City, Room, Booking]
-        can :create, [Room, Booking]
+        can :read, [Amenity, City, Room, Booking, Review]
+        can :create, [Room, Booking, Review]
         can [:update, :destroy], Room do |room|
             room.user_id == user.id 
         end
@@ -26,8 +26,8 @@ class Ability
             special_price.room.user_id == user.id
         end
     elsif user.role? "guest"
-        can :read, [Room, Amenity, City, Booking]
-        can :create, [Room, Booking]
+        can :read, [Room, Amenity, City, Booking, Review]
+        can :create, [Room, Booking, Review]
     end
 
     # Define abilities for the passed in user here. For example:

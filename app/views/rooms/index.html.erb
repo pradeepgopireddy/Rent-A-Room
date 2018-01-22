@@ -1,9 +1,30 @@
 
 <h3>Listing Rooms</h3>
-<ul>
-<% @rooms.each do |room| %>
-	<li><%= link_to room.name, room_path(room.id) %></li>
-<% end %>
-</ul>
+<table>
+	<thead>
+		<tr>
+			<th>Room Image</th>
+			<th> Room Name</th>
+			<th> Description </th>
+			<th> Price </th>
+			<th> Address </th>
+			<th> Host Name</th>
+			<th> City</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @rooms.each do |room| %>
+			<tr>
+				<td><%= link_to image_tag(room.images, size: "250x150"), room_path(room) %></td>
+				<td><%= link_to room.name, room_path(room) %></td>
+				<td><%= room.description %></td>
+				<td><%= room.price %></td>
+				<td><%= room.address %></td>
+				<td><%= room.user.username%></td>
+				<td><%= room.city.name %></td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>
 <%= link_to "Add Room", new_room_path %>
 <%= will_paginate @rooms %>

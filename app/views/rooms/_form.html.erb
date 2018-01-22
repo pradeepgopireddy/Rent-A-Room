@@ -1,4 +1,4 @@
-	<%= form_for @room do |f| %>
+<%= form_for @room do |f| %>
 	<label for="room_name">Name:</label>
 	<%= f.text_field :name %>
 
@@ -19,10 +19,11 @@
 
 	<label for="room_city_id">City:</label>
 	<%= f.collection_select :city_id, City.all, :id, :name, prompt: "Select City" %>
+
 	<h3>Select Amenities</h3>
-	<%= f.collection_check_boxes :amenity_ids, Amenity.all, :id, :name do |amenity| %>
-		<%= amenity.check_box %><%= amenity.label %>
-		<% end %>
+	<%= f.collection_check_boxes :amenity_ids, Amenity.all, :id, :name do |amenity|%>
+		<%= amenity.label %><%= amenity.check_box %>
+	<% end %><br/>
 
 	<%= f.submit %>
 <% end %>
