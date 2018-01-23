@@ -20,8 +20,12 @@ class Room < ApplicationRecord
 		self.longitude = response.parsed_response["results"][0]["geometry"]["location"]["lng"]
 	end
 	def assign_host_role
-		self.user.role_id = Role.second.id 
-		self.user.save
+		if self.user.role? "admin"
+			self.user.role_id = Role.first.id
+		else
+			self.user.role_id = Role.second.id 
+			self.user.save
+		end
 	end
 		
 end

@@ -20,7 +20,7 @@
 				<td><%= room.address %></td>
 				<td><%= room.price %></td>
 				<td><%= room.user.username%></td>
-				<td><%= room.city.name %></td>
+				<td><%= link_to room.city.name, city_path(room.city) %></td>
 				<td>
 					<% if (user_signed_in?) && (can? :update, room) %>
 					 	<%= link_to "Edit", edit_room_path(room.id) %> |
@@ -34,5 +34,7 @@
 		<% end %>
 	</tbody>
 </table>
+<% if user_signed_in? %>
 <%= link_to "Add Room", new_room_path %>
+<% end %>
 <%= will_paginate @rooms %>

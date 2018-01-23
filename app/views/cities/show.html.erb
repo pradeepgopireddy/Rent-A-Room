@@ -7,6 +7,7 @@
 <% if @city.rooms.where("is_authorized = ?", true).empty?%>
 	<p>No authorized rooms in this city</p>
 <% else %>
+	<h5>Listing Rooms(<%= @city.rooms.where("is_authorized =?", true).length%>)</h5>
 	<ul>
 	<% @city.rooms.each do |room| %>
 		<% if room.is_authorized? %>

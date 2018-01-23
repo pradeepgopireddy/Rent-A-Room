@@ -18,6 +18,6 @@ class ReviewsController < ApplicationController
 	end
 	private
 	def review_params
-		params[:review].permit(:review, :food_rating, :cleanliness_rating, :saftey_rating, :facility_rating, :locality_rating, :room_id)
+		params[:review].permit(:review, :food_rating, :cleanliness_rating, :saftey_rating, :facility_rating, :locality_rating, :room_id, :user_id)
 	end
 end

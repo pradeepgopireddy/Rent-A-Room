@@ -28,12 +28,18 @@
           <td><%= booking.price %></td>
           <td><%= booking.room.user.username %></td>
           <td><%= booking.room.name %></td>
-          <td><%= booking.is_confirmed %></td>
-          <td><%= link_to 'Show', booking %></td>
-          <% if (user_signed_in?) && (can? :update, booking) %>
-            <td><%= link_to 'Edit', edit_booking_path(booking) %></td>
+          <td><%if booking.is_confirmed? %>
+                <p>confirmed</p>
+              <% else %>
+                <p>Not confirmed</p>
+              <% end %>
+          </td>
+          <td>
+          <%= link_to 'Show', booking %>
+          <% if (user_signed_in?) && (can? :destroy, booking) %>
+           | <%= link_to 'Destroy', booking, method: :delete, data: { confirm: 'Are you sure?' } %>
           <% end %>
-          <td><%= link_to 'Destroy', booking, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <td>
           
         </tr>
       <% end %>
@@ -63,7 +69,10 @@
           <td><%= booking.price %></td>
           <td><%= booking.room.user.username %></td>
           <td><%= booking.room.name %></td>
-          <td><%= booking.is_confirmed %></td>
+          <td><%if  booking.is_confirmed? %>
+                  <p>confirmed</p>
+              <% end %>
+          </td>
           <td><%= link_to 'Show', booking %></td>
           <% if (user_signed_in?) && (can? :update, booking) %>
             <td><%= link_to 'Edit', edit_booking_path(booking) %></td>
@@ -98,7 +107,12 @@
           <td><%= booking.price %></td>
           <td><%= booking.room.user.username %></td>
           <td><%= booking.room.name %></td>
-          <td><%= booking.is_confirmed %></td>
+          <td><%if booking.is_confirmed? %>
+                  <p>confirmed</p>
+                <% else %>
+                  <p>Not confirmed</p>
+                <% end %>
+          </td>
           <td><%= link_to 'Show', booking %></td>
           <% if (user_signed_in?) && (can? :update, booking) %>
             <td><%= link_to 'Edit', edit_booking_path(booking) %></td>

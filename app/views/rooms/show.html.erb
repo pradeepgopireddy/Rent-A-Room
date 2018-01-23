@@ -26,12 +26,13 @@
 	<li><%= amenity.name %></li>
 <% end %>
 </ul>
+<p><b>Host: </b><%= @room.user.username %></p>
 <!-- AIzaSyC4d23Mk4IFcjFAcOGYJormK-eIBQjRnrU -->
 <iframe 
 	width= "600"
 	height= "450"
 	frameborder= "0" style="border:0"
-	src="https://www.google.com/maps/embed/v1/place?key=AIzaSyC4d23Mk4IFcjFAcOGYJormK-eIBQjRnrU&q=<%= @room.address%>" allowfullscreeen></iframe><br/>
+	src="https://www.google.com/maps/embed/v1/place?key=AIzaSyC4d23Mk4IFcjFAcOGYJormK-eIBQjRnrU&q=<%= @room.latitude%>, <%= @room.longitude %>" allowfullscreeen></iframe><br/>
 <% if @room.reviews.any? %>
 	<h3>Listing Reviews <%= @room.reviews.length %></h3>
 	<ul>
@@ -92,9 +93,9 @@
 	<% end %>
 <% end %>
 <% if user_signed_in? %>
-<% if (@room.user_id == current_user.id)  && (can? :create, SpecialPrice.new) %>
-	<%= link_to "Add Special Price", new_room_special_price_path(@room.id) %>
-<% end %>
+	<% if (@room.user_id == current_user.id)  && (can? :create, SpecialPrice.new) %>
+		<%= link_to "Add Special Price", new_room_special_price_path(@room.id) %>
+	<% end %>
 	<%if Review.where("user_id = ? AND room_id = ?", current_user.id, @room.id).length < Booking.where("user_id < ? AND room_id = ?  AND end_date = ?", current_user.id, @room.id, Date.today).length %>
 
 		<%= form_for @review do |f| %>

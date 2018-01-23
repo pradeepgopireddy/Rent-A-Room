@@ -19,6 +19,6 @@ class User < ApplicationRecord
    end
 
    def role?(role_name)
-    self.role.name.include?(role_name)
+    self.role.name == role_name
   end
 end

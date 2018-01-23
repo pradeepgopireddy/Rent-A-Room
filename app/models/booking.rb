@@ -1,3 +1,4 @@
+
 class Booking < ApplicationRecord
 	belongs_to :user
 	belongs_to :room
@@ -17,15 +18,19 @@ class Booking < ApplicationRecord
 		end
 	end
 	def check_booking_dates
-		present_booking = (self.start_date..self.end_date).to_a
+		
 		Booking.where("room_id = ? AND end_date >= ?", self.room_id, Date.today).each do |past_booking|
-			(past_booking.start_date..past_booking.end_date).to_a.each do |booked_date|
+			self.check(past_booking)
+		end
+	end
+	def check(past_booking)
+		present_booking = (self.start_date..self.end_date).to_a
+		(past_booking.start_date..past_booking.end_date).to_a.each do |booked_date|
 				if present_booking.include? booked_date
 					self.errors.add(:error, "Room is not available at this present booking dates")
 				end
 				break
 			end
-		end
 	end
 	def total_price
 		if self.room.special_prices.any?
