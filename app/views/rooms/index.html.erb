@@ -5,11 +5,11 @@
 		<tr>
 			<th>Room Image</th>
 			<th> Room Name</th>
-			<th> Description </th>
-			<th> Price </th>
 			<th> Address </th>
+			<th> Price </th>
 			<th> Host Name</th>
 			<th> City</th>
+			<th colspan="2"></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -17,11 +17,19 @@
 			<tr>
 				<td><%= link_to image_tag(room.images, size: "250x150"), room_path(room) %></td>
 				<td><%= link_to room.name, room_path(room) %></td>
-				<td><%= room.description %></td>
-				<td><%= room.price %></td>
 				<td><%= room.address %></td>
+				<td><%= room.price %></td>
 				<td><%= room.user.username%></td>
 				<td><%= room.city.name %></td>
+				<td>
+					<% if (user_signed_in?) && (can? :update, room) %>
+					 	<%= link_to "Edit", edit_room_path(room.id) %> |
+					<% end %>
+					<% if (user_signed_in?) && (can? :destroy, room) %>
+					 	<%= link_to "Destroy", room_path(room.id), method: :delete,
+					 data: {confirm: "Are you sure want to remove house"} %>
+					<% end %>
+				</td>
 			</tr>
 		<% end %>
 	</tbody>

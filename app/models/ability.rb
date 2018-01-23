@@ -25,9 +25,15 @@ class Ability
         can [:update, :destroy], SpecialPrice do |special_price|
             special_price.room.user_id == user.id
         end
+        can :destroy, Review do |review|
+            review.user_id == user.id
+        end
     elsif user.role? "guest"
         can :read, [Room, Amenity, City, Booking, Review]
         can :create, [Room, Booking, Review]
+        can :destroy, Review do |review|
+            review.user_id == user.id
+        end
     end
 
     # Define abilities for the passed in user here. For example:

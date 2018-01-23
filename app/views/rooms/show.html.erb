@@ -36,9 +36,13 @@
 	<h3>Listing Reviews <%= @room.reviews.length %></h3>
 	<ul>
 	<% @room.reviews.each do |review| %>
-	<li><h5><%= review.user.username %></h5></li>
-	<li><%= review.created_at %></li>
-	<li><p><%= review.review %></p></li>
+		<li><h5><%= review.user.username %></h5></li>
+		<li><%= review.created_at %></li>
+		<li><p><%= review.review %></p></li>
+		<li><p>Average Rating: <%= "%.1f" % (review.food_rating + review.cleanliness_rating + review.saftey_rating + review.facility_rating + review.locality_rating).to_f/ 5.0 %></p></li>
+		<% if (user_signed_in?) && (can? :destroyroy, review) %>
+			<%= link_to "delete", review_path(review.id), method: :delete, data: {confirm: "Are you sure?"}  %>
+		<% end %> 
 	<% end %>
 	</ul>
 <% else %>

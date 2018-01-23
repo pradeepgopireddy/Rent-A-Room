@@ -9,19 +9,16 @@
   </head>
 
   <body>
-  <%= link_to "Rooms", rooms_path %> | <%= link_to "Cities", cities_path %> 
-  <% if (user_signed_in?) && (can? :create, Amenity.new) %>
-  | <%= link_to "Amenities", amenities_path %>
-  <% end %>
+  <b><%= link_to "Rooms", rooms_path %></b> | <b><%= link_to "Cities", cities_path %></b> 
   <% if (user_signed_in?) && (current_user.role? "host") %>
    | <%= link_to "My Rooms", rooms_my_rooms_path %> | <%= link_to "Unconfirmed Bookings", bookings_unconfirmed_bookings_path %>
   <% end %>
   <% if (user_signed_in?) && (current_user.role? "admin") %>
-   | <%= link_to "Unauthorized rooms", rooms_unauthorized_rooms_path %>
+   <b>| <%= link_to "Amenities", amenities_path %></b> | <b><%= link_to "Unauthorized rooms", rooms_unauthorized_rooms_path %></b>
   <% end %>
   <% if user_signed_in? %>
-  	welcome! <%= current_user.username %> <%= current_user.role.name %>
-    <%= link_to "My Bookings", bookings_path %> |
+  	<b>welcome! <%= current_user.username %> Role: <%= current_user.role.name %></b>
+    <b><%= link_to "My Bookings", bookings_path %></b> |
   	<%= link_to "Account Setting", edit_user_registration_path %> |
   	<%= link_to "Logout", destroy_user_session_path, method: :delete %>
   <% else %>

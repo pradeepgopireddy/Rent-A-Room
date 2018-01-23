@@ -11,7 +11,11 @@ class ReviewsController < ApplicationController
 			redirect_to room_path(@review.room_id), notice: "Successfully added the review."
 		end
 	end
-
+	def destroy
+		@review = Review.find(params[:id])
+		@review.destroy
+		redirect_to room_path(@review.room_id), notice: "Successfully destroyed the review."
+	end
 	private
 	def review_params
 		params[:review].permit(:review, :food_rating, :cleanliness_rating, :saftey_rating, :facility_rating, :locality_rating, :room_id)
