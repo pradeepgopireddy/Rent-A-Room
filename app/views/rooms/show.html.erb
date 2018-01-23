@@ -27,6 +27,11 @@
 <% end %>
 </ul>
 <p><b>Host: </b><%= @room.user.username %></p>
+<ul>
+<% @room.user.rooms.where.not("id = ?", @room.id).where("is_authorized = ?", true).each do |room| %>
+	<li><%=link_to room.name, room_path(room.id) %></li> 
+<% end %>
+</ul>
 <!-- AIzaSyC4d23Mk4IFcjFAcOGYJormK-eIBQjRnrU -->
 <iframe 
 	width= "600"
