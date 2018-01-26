@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   rescue_from CanCan::AccessDenied do 
   	redirect_to root_path, notice: "The page you are looking for doesn't exist"
   end
+  
 
   protected
 

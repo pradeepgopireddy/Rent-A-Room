@@ -6,7 +6,9 @@ class RoomsController < ApplicationController
 	#path = rooms_path
 	#HTTP method = GET
 	def index
-		@rooms = Room.where("is_authorized = ?", true).paginate(:page => params[:page], :per_page => 3)
+		 @rooms = Room.where("is_authorized = ?", true).paginate(:page => params[:page], :per_page => 3)
+		#@rooms = Room.lessthan_1000
+
 	end
 	#url = localhost:3000/room/new
 	#uri = /room/new
