@@ -44,12 +44,10 @@ class Booking < ApplicationRecord
 	end
 
 	def send_email_to_host_guest
-		NotificationMailer.booking_created(room).deliver!
-		NotificationMailer.booking_confirmation(self).deliver!
-	end
+		BookingCreatedMailJob.perform_later(self)
 
 	def confirmation_mail_to_guest
-		NotificationMailer.booking_status(self).deliver!
+		BookingStatusJob.perform_later(self)
 	end
 
 	private
