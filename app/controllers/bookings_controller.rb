@@ -1,5 +1,5 @@
 class BookingsController < ApplicationController
-  before_action :set_booking, only: [:show, :edit, :update, :destroy, :cancel_booking]
+  before_action :set_booking, only: [:show, :edit, :update, :destroy]
   load_and_authorize_resource
 
   # GET /bookings
@@ -67,10 +67,6 @@ class BookingsController < ApplicationController
         @bookings = Booking.where("is_confirmed = ?", false)
   end
   
-  def cancel_booking
-    @booking.destroy
-    redirect_to bookings_cancel_booking_path, notice: 'Booking was successfully destroyed'
-  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

@@ -26,7 +26,7 @@
 								<%=f.hidden_field :is_confirmed, value: true %>
 								<%= f.submit "Confirm",class:"btn btn-default pull-left" %>
 							<% end %>
-							<%= button_to "Cancel", bookings_cancel_booking_path(booking.id), method: :delete, data: {confirm: "Are you sure"} %>
+							<%= link_to "Cancel", booking_path(booking.id), method: :delete, data: {confirm: "Are you sure?"} %>
 						</td>
 					</tr>
 				<% end %>

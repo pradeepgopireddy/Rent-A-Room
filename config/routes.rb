@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 	resources :reviews
-	get "bookings/cancel_booking"
+	delete "bookings/cancel_booking"
 	get "bookings/unconfirmed_bookings"
 	resources :bookings
 	get "rooms/my_rooms"

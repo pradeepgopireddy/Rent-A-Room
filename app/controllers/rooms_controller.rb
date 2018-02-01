@@ -44,8 +44,7 @@ class RoomsController < ApplicationController
 		@room = Room.find(params[:id])
 		
 		if @room.update_attributes(room_params)
-
-			NotificationMailer.authorize_confirmed(@room).deliver!
+			SendMailJob.perform_later(@room)
 			redirect_to room_path(@room.id), notice: "Successfully updated the room details "
 		else
 			render action: 'edit'

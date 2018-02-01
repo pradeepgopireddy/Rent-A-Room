@@ -20,18 +20,10 @@ class Booking < ApplicationRecord
 	def check_booking_dates
 		
 		Booking.where("room_id = ? AND end_date >= ?", self.room_id, Date.today).each do |past_booking|
-			self.check(past_booking)
+			check(past_booking)
 		end
 	end
-	def check(past_booking)
-		present_booking = (self.start_date..self.end_date).to_a
-		(past_booking.start_date..past_booking.end_date).to_a.each do |booked_date|
-				if present_booking.include? booked_date
-					self.errors.add(:error, "Room is not available at this present booking dates")
-				end
-				break
-			end
-	end
+	
 	def total_price
 		if self.room.special_prices.any?
 			present_booking = (self.start_date..self.end_date).to_a
@@ -52,11 +44,22 @@ class Booking < ApplicationRecord
 	end
 
 	def send_email_to_host_guest
-		NotificationMailer.booking_created(self).deliver!
+		NotificationMailer.booking_created(room).deliver!
 		NotificationMailer.booking_confirmation(self).deliver!
 	end
 
 	def confirmation_mail_to_guest
 		NotificationMailer.booking_status(self).deliver!
+	end
+
+	private
+	def check(past_booking)
+		present_booking = (self.start_date..self.end_date).to_a
+		(past_booking.start_date..past_booking.end_date).to_a.each do |booked_date|
+				if present_booking.include? booked_date
+					self.errors.add(:error, "Room is not available at this present booking dates")
+				end
+				break
+			end
 	end
 end

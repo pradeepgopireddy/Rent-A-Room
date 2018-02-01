@@ -101,8 +101,8 @@
 	<% if (@room.user_id == current_user.id)  && (can? :create, SpecialPrice.new) %>
 		<%= link_to "Add Special Price", new_room_special_price_path(@room.id) %>
 	<% end %>
-	<%if Review.where("user_id = ? AND room_id = ?", current_user.id, @room.id).length < Booking.where("user_id < ? AND room_id = ?  AND end_date = ?", current_user.id, @room.id, Date.today).length %>
-
+	<% user_room_bookings =current_user.bookings.where('room_id = ?', @room.id) %> 
+	<% if !user_room_bookings.empty? && user_room_bookings.last.end_date < Date.today && @room.reviews.where('user_id = ?', current_user.id).count.zero? %>
 		<%= form_for @review do |f| %>
 			<label for="review_review"><b>Review:</b></label>
 			<%= f.text_field :review %>
