@@ -21,9 +21,16 @@
 	<%= f.collection_select :city_id, City.all, :id, :name, prompt: "Select City" %>
 
 	<h3>Select Amenities</h3>
+	<%#= f.collection_select :amenity_ids, Amenity.all, :id, :name, 
+	{ include_blank: true},
+    { class: 'chosen-select', :multiple=>true, :data => { :placeholder => 'Select Amenities ' }}%>
 	<%= f.collection_check_boxes :amenity_ids, Amenity.all, :id, :name do |amenity|%>
-		<%= amenity.label %><%= amenity.check_box %>
-	<% end %><br/>
+		<p><%= amenity.check_box %><%= amenity.label %></p>
+	<% end %>
 
 	<%= f.submit %>
 <% end %>
+<script type="text/javascript">
+
+	$('#room_city_id').chosen();
+</script>
