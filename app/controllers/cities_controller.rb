@@ -62,6 +62,10 @@ class CitiesController < ApplicationController
       format.json { head :no_content }
     end
   end
+  def check_name_present
+    @city = City.find_by(name: params[:name])
+    render json: @city.nil? ? {msg: true} : {msg: false}
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

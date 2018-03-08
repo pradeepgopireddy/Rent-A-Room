@@ -1,36 +1,231 @@
+<div class="row">
+<div class="col-md-3">
 <%= form_for @room do |f| %>
-	<label for="room_name">Name:</label>
-	<%= f.text_field :name %>
+	<div class="form-group" id="nameGroup">
+		<label for="room_name">Name:</label>
+		<%= f.text_field :name, class: "form-control" %>
+		<span id="nameError"></span>
+	</div>
 
-	<label for = "room_description">Description:</label>
-	<%= f.text_area :description %>
+	<div class="form-group" id="descriptionGroup">
+		<label for = "room_description">Description:</label>
+		<%= f.text_area :description, class: "form-control" %>
+		<span id="descriptionError"></span>
+	</div>
 
-	<label for="room_price">Price:</label>
-	<%= f.number_field :price %>
+	<div class="form-group" id="priceGroup">
+		<label for="room_price">Price:</label>
+		<%= f.number_field :price, class: "form-control" %>
+		<span id="priceError"></span>
+	</div>
 
-	<label for="room_rules">Rules:</label>
-	<%= f.text_area :rules %>
+	<div class="form-group" id="rulesGroup">
+		<label for="room_rules">Rules:</label>
+		<%= f.text_area :rules, class: "form-control" %>
+		<span id="rulesError"></span>
+	</div>
 
-	<label for="room_address">Address:</label>
-	<%= f.text_area :address %>
+	<div class="form-group" id="addressGroup">
+		<label for="room_address">Address:</label>
+		<%= f.text_area :address, class: "form-control" %>
+		<span id="addressError"></span>
+	</div>
 
-	<label for="room_images">Images:</label>
-	<%= f.file_field :images %>
+	<div class="form-group" id="imagesGroup">
+		<label for="room_images">Images:</label>
+		<%= f.file_field :images, class: "form-control" %>
+		<span id="imagesError"></span>
+	</div>
 
-	<label for="room_city_id">City:</label>
-	<%= f.collection_select :city_id, City.all, :id, :name, prompt: "Select City" %>
-
+	<div class="form-group" id="cityGroup">
+		<label for="room_city_id">City:</label>
+		<%= f.collection_select :city_id, City.all, :id, :name, prompt: "Select City", class: "form-control"%>
+		<span id="cityError"></span>
+	</div>
+	<%= f.submit "Submit", id: "submit", class: "btn btn-primary" %>
+	</div>
+	<div class="col-md-3">
 	<h3>Select Amenities</h3>
-	<%#= f.collection_select :amenity_ids, Amenity.all, :id, :name, 
-	{ include_blank: true},
-    { class: 'chosen-select', :multiple=>true, :data => { :placeholder => 'Select Amenities ' }}%>
 	<%= f.collection_check_boxes :amenity_ids, Amenity.all, :id, :name do |amenity|%>
-		<p><%= amenity.check_box %><%= amenity.label %></p>
+		<%= amenity.check_box %> <%= amenity.label %><br>
 	<% end %>
-
-	<%= f.submit %>
+	</div>
+	
 <% end %>
+</div>
 <script type="text/javascript">
+	//$('#room_city_id').chosen();
 
-	$('#room_city_id').chosen();
+	var nameFormat = /^[a-zA-Z0-9 ]*$/;
+	var descriptionFormat = /^[a-zA-Z ]*$/;
+  	var addressFormat = /^[ A-Za-z0-9_@./#&+-]*$/;
+  	var priceFormat = /^\d+$/;
+
+	var nameHandle = document.getElementById('room_name');
+	var descriptionHandle = document.getElementById('room_description');
+	var priceHandle = document.getElementById('room_price');
+	var rulesHandle = document.getElementById('room_rules');
+	var addressHandle = document.getElementById('room_address');
+	var imagesHandle = document.getElementById('room_images');
+	var cityHandle = document.getElementById('room_city_id');
+	var formHandle = document.getElementById('new_room');
+	var submitHandle = document.getElementById('submit');
+
+	var nameErrorHandle = document.getElementById('nameError');
+	var descriptionErrorHandle = document.getElementById('descriptionError')
+	var priceErrorHandle = document.getElementById('priceError');
+	var rulesErrorHandle = document.getElementById('rulesError');
+	var addressErrorHandle = document.getElementById('addressError');
+	var imagesErrorHandle = document.getElementById('imagesError');
+	var cityErrorHandle = document.getElementById('cityError');
+
+	var nameGroupHandle = document.getElementById('nameGroup');
+	var descriptionGroupHandle = document.getElementById('descriptionGroup')
+	var priceGroupHandle = document.getElementById('priceGroup');
+	var rulesGroupHandle = document.getElementById('rulesGroup');
+	var addressGroupHandle = document.getElementById('addressGroup');
+	var imagesGroupHandle = document.getElementById('imagesGroup');
+	var cityGroupHandle = document.getElementById('cityGroup');
+
+	var validator = {
+		nameValid: false,
+		descriptionValid: false,
+		priceValid: false,
+		rulesValid: false,
+		addressValid: false,
+		imagesValid: false,
+		cityValid: false
+	};
+
+	function formErrors(fieldGroup, fieldStatus){
+		if(fieldStatus){
+			fieldGroup.classList.remove('formError');
+			fieldGroup.classList.add('formSuccess');
+		}else{
+			fieldGroup.classList.remove('formSuccess');
+			fieldGroup.classList.add('formError');
+		}
+	}
+	function nameValidation(){
+	    if(nameHandle.value === ""){
+	      validator.nameValid = false;
+	      nameErrorHandle.innerHTML = "can't be blank";
+	      formErrors(nameGroupHandle, validator.nameValid);
+	    }else if(!nameFormat.test(nameHandle.value)){
+	      validator.nameValid = false;
+	      nameErrorHandle.innerHTML = "should be alphabets only";
+	      formErrors(nameGroupHandle, validator.nameValid);
+	    }else{
+	    	validator.nameValid = true;
+	    	nameErrorHandle.innerHTML = "";
+	    	formErrors(nameGroupHandle, validator.nameValid);
+	    }
+	}
+	function descriptionValidation(){
+	    if(descriptionHandle.value === ""){
+	      validator.descriptionValid = false;
+	      descriptionErrorHandle.innerHTML = "can't be blank";
+	      formErrors(descriptionGroupHandle, validator.descriptionValid);
+	    }else if(!descriptionFormat.test(descriptionHandle.value)){
+	      validator.descriptionValid = false;
+	      descriptionErrorHandle.innerHTML = "should be alphabets only";
+	      formErrors(descriptionGroupHandle, validator.descriptionValid);
+	    }else if(descriptionHandle.value.length < 10){
+	      validator.descriptionValid = false;
+	      descriptionErrorHandle.innerHTML = "description too small";
+	      formErrors(descriptionGroupHandle, validator.descriptionValid);
+	    }else{
+	      validator.descriptionValid = true;
+	      descriptionErrorHandle.innerHTML = "";
+	      formErrors(descriptionGroupHandle, validator.descriptionValid);
+	    }
+	}
+	function priceValidation(){
+	    if(priceHandle.value === ""){
+	      validator.priceValid = false;
+	      priceErrorHandle.innerHTML = "can't be blank";
+	      formErrors(priceGroupHandle, validator.priceValid);
+	    }else if(!priceFormat.test(priceHandle.value)){
+	      validator.priceValid = false;
+	      priceErrorHandle.innerHTML = "should be numbers only";
+	      formErrors(priceGroupHandle, validator.priceValid);
+	    }else if(parseInt(priceHandle.value) <= 0){
+	    	validator.priceValid = false;
+	    	priceErrorHandle.innerHTML = "must be greater than zero";
+	    	formErrors(priceGroupHandle, validator.priceValid);
+	    }else{
+	    	validator.priceValid = true;
+	    	priceErrorHandle.innerHTML = "";
+	    	formErrors(priceGroupHandle, validator.priceValid);
+	    }
+	}
+	function rulesValidation(){
+	    if(rulesHandle.value === ""){
+	      validator.rulesValid = false;
+	      rulesErrorHandle.innerHTML = "can't be blank";
+	      formErrors(rulesGroupHandle, validator.rulesValid);
+	    }else if(!descriptionFormat.test(rulesHandle.value)){
+	      validator.rulesValid = false;
+	      rulesErrorHandle.innerHTML = "should be alphabets only";
+	      formErrors(rulesGroupHandle, validator.rulesValid);
+	    }else{
+	      validator.rulesValid = true;
+	      rulesErrorHandle.innerHTML = "";
+	      formErrors(rulesGroupHandle, validator.rulesValid);
+	    }
+	}
+	function addressValidation(){
+	    if(addressHandle.value === ""){
+	      validator.addressValid = false;
+	      addressErrorHandle.innerHTML = "can't be blank";
+	      formErrors(addressGroupHandle, validator.addressValid);
+	    }else if(!addressFormat.test(addressHandle.value)){
+	      validator.addressValid = false;
+	      addressErrorHandle.innerHTML = "check address format";
+	      formErrors(addressGroupHandle, validator.addressValid);
+	    }else{
+	    	validator.addressValid = true;
+	    	addressErrorHandle.innerHTML = "";
+	    	formErrors(addressGroupHandle, validator.addressValid);
+	    }
+	}
+	function imagesValidation(){
+	    if(imagesHandle.value === ""){
+	      validator.imagesValid = false;
+	      imagesErrorHandle.innerHTML = "can't be blank";
+	      formErrors(imagesGroupHandle, validator.imagesValid);
+	    }else{
+	    	validator.imagesValid = true;
+	    	imagesErrorHandle.innerHTML = "";
+	    	formErrors(imagesGroupHandle, validator.imagesValid);
+	    }
+	}
+	function cityValidation(){
+	    if(cityHandle.value === ""){
+	      validator.cityValid = false;
+	      cityErrorHandle.innerHTML = "can't be blank";
+	      formErrors(cityGroupHandle, validator.cityValid);
+	    }else{
+	    	validator.cityValid = true;
+	    	cityErrorHandle.innerHTML = "";
+	    	formErrors(cityGroupHandle, validator.cityValid);
+	    }
+	}
+	formHandle.addEventListener('submit', function(e){
+		nameValidation();
+		descriptionValidation();
+		priceValidation();
+		rulesValidation();
+		addressValidation();
+		imagesValidation();
+		cityValidation();
+		if(Object.values(validator).includes(false)){
+			e.preventDefault();
+			setTimeout(function(){
+				submitHandle.disabled = false;
+			}, 100)
+		}else{
+			
+		}
+	}, false)
 </script>

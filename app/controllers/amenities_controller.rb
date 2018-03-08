@@ -62,7 +62,10 @@ class AmenitiesController < ApplicationController
       format.json { head :no_content }
     end
   end
-
+  def check_name_present
+    @amenity = Amenity.find_by(name: params[:name])
+    render json: @amenity.nil? ? {msg: true} : {msg: false}
+  end
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_amenity

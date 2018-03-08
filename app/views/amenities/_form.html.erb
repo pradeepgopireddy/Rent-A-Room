@@ -1,4 +1,5 @@
-<%= form_with(model: amenity, local: true) do |form| %>
+<div class="col-md-3">
+<%= form_with(model: amenity, local: true, id: "amenity_form") do |form| %>
   <% if amenity.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(amenity.errors.count, "error") %> prohibited this amenity from being saved:</h2>
@@ -11,17 +12,112 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="form-group" id="nameGroup">
     <%= form.label :name %>
-    <%= form.text_field :name, id: :amenity_name %>
+    <%= form.text_field :name, id: :amenity_name, class: "form-control" %>
+    <span id="nameError"></span>
   </div>
 
-  <div class="field">
+  <div class="form-group" id="descriptionGroup">
     <%= form.label :description %>
-    <%= form.text_area :description, id: :amenity_description %>
+    <%= form.text_area :description, id: :amenity_description, class: "form-control" %>
+    <span id="descriptionError"></span>
   </div>
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit "Submit", class: "btn btn-primary", id: "submit" %>
   </div>
 <% end %>
+</div>
+<script type="text/javascript">
+  var nameFormat = /^[a-zA-Z ]*$/;
+  var descriptionFormat = /^[a-zA-Z ]*$/;
+
+  var nameHandle = document.getElementById('amenity_name');
+  var descriptionHandle = document.getElementById('amenity_description');
+  var formHandle = document.getElementById('amenity_form');
+  var submitHandle = document.getElementById('submit');
+
+  var nameErrorHandle = document.getElementById('nameError');
+  var descriptionErrorHandle = document.getElementById('descriptionError');
+
+  var nameGroupHandle = document.getElementById('nameGroup');
+  var descriptionGroupHandle = document.getElementById('descriptionGroup');
+
+  var validator = {
+    nameValid: false,
+    descriptionValid: false
+  };
+  function formErrors(fieldGroup, fieldStatus){
+      if(fieldStatus){
+        fieldGroup.classList.remove('formError');
+        fieldGroup.classList.add('formSuccess');
+      }else{
+        fieldGroup.classList.remove('formSuccess');
+        fieldGroup.classList.add('formError');
+      }
+  }
+  nameHandle.addEventListener('blur', function(){
+    nameValidation();
+  }, false)
+  function nameValidation(){
+    if(nameHandle.value === ""){
+      validator.nameValid = false;
+      nameErrorHandle.innerHTML = "can't be blank";
+      formErrors(nameGroupHandle, validator.nameValid);
+    }else if(!nameFormat.test(nameHandle.value)){
+      validator.nameValid = false;
+      nameErrorHandle.innerHTML = "should be alphabets only";
+      formErrors(nameGroupHandle, validator.nameValid);
+    }else{
+      var xhr = new XMLHttpRequest();
+        xhr.open('GET', `/amenities/check_name_present?name=${nameHandle.value}`, true);
+        xhr.onreadystatechange = function(){
+          if(xhr.readyState === 4 && xhr.status === 200){
+            var response = JSON.parse(xhr.responseText);
+            if(response.msg){
+              validator.nameValid = true;
+              nameErrorHandle.innerHTML = "can be used";
+              formErrors(nameGroupHandle, validator.nameValid);
+            }else{
+              validator.nameValid = false;
+              nameErrorHandle.innerHTML = "amenity already created";
+              formErrors(nameGroupHandle, validator.nameValid);
+            }
+          }
+        }
+      xhr.send();
+    }
+  }
+  function descriptionValidation(){
+    if(descriptionHandle.value === ""){
+      validator.descriptionValid = false;
+      descriptionErrorHandle.innerHTML = "can't be blank";
+      formErrors(descriptionGroupHandle, validator.descriptionValid);
+    }else if(!descriptionFormat.test(descriptionHandle.value)){
+      validator.descriptionValid = false;
+      descriptionErrorHandle.innerHTML = "should be alphabets only";
+      formErrors(descriptionGroupHandle, validator.descriptionValid);
+    }else if(descriptionHandle.value.length < 10){
+      validator.descriptionValid = false;
+      descriptionErrorHandle.innerHTML = "description too small";
+      formErrors(descriptionGroupHandle, validator.descriptionValid);
+    }else{
+      validator.descriptionValid = true;
+      descriptionErrorHandle.innerHTML = "";
+      formErrors(descriptionGroupHandle, validator.descriptionValid);
+    }
+  }
+  formHandle.addEventListener('submit', function(e){
+    nameValidation();
+    descriptionValidation();
+    if(Object.values(validator).includes(false)){
+      e.preventDefault();
+      setTimeout(function(){
+        submitHandle.disabled = false;
+      }, 100);
+    }else{
+
+    }
+  }, false)
+</script>

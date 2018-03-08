@@ -9,7 +9,9 @@ Rails.application.routes.draw do
 		resources :special_prices
 	end
   devise_for :users
+  get "amenities/check_name_present"
   resources :amenities
+  get "/cities/check_name_present"
   resources :cities
   root "rooms#index"
 

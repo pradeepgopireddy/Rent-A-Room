@@ -1,4 +1,5 @@
-<%= form_with(model: city, local: true) do |form| %>
+<div class="col-md-3">
+<%= form_with(model: city, local: true, id: "city_form") do |form| %>
   <% if city.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(city.errors.count, "error") %> prohibited this city from being saved:</h2>
@@ -11,12 +12,75 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="form-group" id="nameGroup">
     <%= form.label :name %>
-    <%= form.text_field :name, id: :city_name %>
+    <%= form.text_field :name, id: :city_name, class: "form-control" %>
+    <span id="nameError"></span>
   </div>
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit "Submit", class: "btn btn-primary", id: "submit" %>
   </div>
 <% end %>
+</div>
+<script type="text/javascript">
+  var nameFormat = /^[a-zA-Z ]*$/;
+
+  var nameHandle = document.getElementById('city_name');
+  var formHandle = document.getElementById('city_form');
+  var submitHandle = document.getElementById('submit');
+
+  var nameErrorHandle = document.getElementById('nameError');
+
+  var nameGroupHandle = document.getElementById('nameGroup');
+  var nameValid = false;
+  function formErrors(fieldGroup, fieldStatus){
+      if(fieldStatus){
+        fieldGroup.classList.remove('formError');
+        fieldGroup.classList.add('formSuccess');
+      }else{
+        fieldGroup.classList.remove('formSuccess');
+        fieldGroup.classList.add('formError');
+      }
+  } 
+  function nameValidation(){
+    if(nameHandle.value === ""){
+      nameValid = false;
+      nameErrorHandle.innerHTML = "can't be blank";
+      formErrors(nameGroupHandle, nameValid);
+    }else if(!nameFormat.test(nameHandle.value)){
+      nameValid = false;
+      nameErrorHandle.innerHTML = "should be alphabets only";
+      formErrors(nameGroupHandle, nameValid);
+    }else{
+      var xhr = new XMLHttpRequest();
+        xhr.open('GET', `/cities/check_name_present?name=${nameHandle.value}`, true);
+        xhr.onreadystatechange = function(){
+          if(xhr.readyState === 4 && xhr.status === 200){
+            var response = JSON.parse(xhr.responseText);
+            if(response.msg){
+              nameValid = true;
+              nameErrorHandle.innerHTML = "can be used";
+              formErrors(nameGroupHandle, nameValid);
+            }else{
+              nameValid = false;
+              nameErrorHandle.innerHTML = "amenity already created";
+              formErrors(nameGroupHandle, nameValid);
+            }
+          }
+        }
+      xhr.send();
+    }
+  }
+  formHandle.addEventListener('submit', function(e){
+    nameValidation();
+    if(!nameValid){
+      e.preventDefault();
+      setTimeout(function(){
+        submitHandle.disabled = false;
+      },100)
+    }else{
+
+    }
+  }, false)
+</script>
