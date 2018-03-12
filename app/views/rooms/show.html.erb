@@ -143,6 +143,8 @@
 	<%end %>
 <% end %>
 <script>
+ var bookings = "<%= @room.name %>";
+ console.log(bookings);
 	$(document).ready(function(){
     	$('#booking_start_date').datepicker({
       		dateFormat: "yy-mm-dd",
@@ -152,11 +154,11 @@
       		onClose: function(){
             $("#booking_end_date").datepicker("change",{ minDate: new Date($('#booking_start_date').val()) });
         	}
-    	}),
+    	});
    		$('#booking_end_date').datepicker({
     		dateFormat: "yy-mm-dd",
     		changeMonth: true,
     		numberOfMonths: 2
-    })
+    });
   });
 </script>
